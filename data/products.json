@@ -1,0 +1,185 @@
+{
+    "products": [{
+            "id": 6,
+            "title": "Samsung Galaxy Z Fold 4 5G",
+            "image": "./images/products/sumsung/flip.avif",
+            "price": "Rs. 1,54,999",
+            "category": "Android"
+        },
+
+        {
+            "id": 3,
+            "title": "Samsung Galaxy S22 Ultra 5G",
+            "image": "./images/products/sumsung/s22.png",
+            "price": "Rs. Rs 98,999",
+            "category": "Android"
+        },
+        {
+            "id": 4,
+            "title": "Xiaomi 12S Ultra",
+            "image": "./images/products/other/12s.jpg",
+            "price": "Rs. 69,999",
+            "category": "Android"
+        },
+        {
+            "id": 8,
+            "title": "iQOO 9T 5G",
+            "image": "./images/products/other/9t.jpg",
+            "price": "Rs. 54,999",
+            "category": "Android"
+        },
+        {
+            "id": 5,
+            "title": "OnePlus 10T 5G",
+            "image": "./images/products/other/10t.avif",
+            "price": "Rs. 49,999",
+            "category": "Android"
+        },
+
+        {
+            "id": 7,
+            "title": "Pixel 6a",
+            "image": "./images/products/other/6a.webp",
+            "price": "Rs. 32,999",
+            "category": "Android"
+        },
+
+
+        {
+            "id": 10,
+            "title": "Nothing Phone 1",
+            "image": "./images/products/other/nothing.webp",
+            "price": "Rs. 29,999",
+            "category": "Android"
+        },
+        {
+            "id": 11,
+            "title": "Samsung Galaxy A53",
+            "image": "./images/products/other/a53.png",
+            "price": "Rs. 24,999",
+            "category": "Android"
+        },
+        {
+            "id": 13,
+            "title": "POCO F4",
+            "image": "./images/products/other/poco.jpg",
+            "price": "Rs. 23,499",
+            "category": "Android"
+        },
+        {
+            "id": 12,
+            "title": "iQOO Z6 Pro 5G",
+            "image": "./images/products/other/z6.jpg",
+            "price": "Rs. 22,999",
+            "category": "Android"
+        },
+
+        {
+            "id": 14,
+            "title": "SAMSUNG Galaxy A21s",
+            "image": "./images/products/other/a21.jpg",
+            "price": "Rs. 14,999",
+            "category": "Android"
+        },
+        {
+            "id": 9,
+            "title": "Redmi Note 11",
+            "image": "./images/products/other/n11.avif",
+            "price": "Rs. 12,999",
+            "category": "Android"
+        },
+        {
+            "id": 15,
+            "title": "iPhone 14 Pro Max",
+            "image": "./images/products/iPhone/14promax.png",
+            "price": "Rs. 1,39,999",
+            "category": "iOS"
+        },
+        {
+            "id": 16,
+            "title": "Apple iPhone 14 Plus",
+            "image": "./images/products/iPhone/14plus.avif",
+            "price": "Rs. 88,999 ",
+            "category": "iOS"
+        },
+        {
+            "id": 17,
+            "title": "Apple iPhone 14",
+            "image": "./images/products/iPhone/14.avif",
+            "price": "Rs. 78,999  ",
+            "category": "iOS"
+        },
+        {
+            "id": 2,
+            "title": "Apple iPhone 13 Pro Max",
+            "image": "./images/products/iPhone/13promax.avif",
+            "price": "Rs. 1,29,999",
+            "category": "iOS"
+        },
+        {
+            "id": 18,
+            "title": "Apple iPhone 13",
+            "image": "./images/products/iPhone/13.avif",
+            "price": "Rs. 69,999",
+            "category": "iOS"
+        },
+        {
+            "id": 20,
+            "title": "Apple iPhone SE",
+            "image": "./images/products/iPhone/se.png",
+            "price": "Rs. 43,999",
+            "category": "iOS"
+        },
+        {
+            "id": 19,
+            "title": "Apple Airpods (3rd Generation)",
+            "image": "./images/products/other/airpods.avif",
+            "price": "Rs. 20,999",
+            "category": "acc"
+        },
+        {
+            "id": 1,
+            "title": "ROG TwinView Dock II",
+            "image": "./images/products/other/dock.png",
+            "price": "Rs. 16,999",
+            "category": "acc"
+        },
+        {
+            "id": 24,
+            "title": "DJI OSMO Mobile 6",
+            "image": "./images/products/other/dj.jpg",
+            "price": "Rs. 9,999",
+            "category": "acc"
+        },
+        {
+            "id": 21,
+            "title": "Noise ColorFit Ultra 2",
+            "image": "./images/products/other/noise.jpg",
+            "price": "Rs. 4,499",
+            "category": "acc"
+        },
+
+        {
+            "id": 25,
+            "title": "boAt Airdopes 441",
+            "image": "./images/products/other/boat.jpg",
+            "price": "Rs. 1,899",
+            "category": "acc"
+        },
+        {
+            "id": 22,
+            "title": "MI Power Bank 20000mAh 50W",
+            "image": "./images/products/other/pb.jpg",
+            "price": "Rs. 1,699",
+            "category": "acc"
+        },
+        {
+            "id": 23,
+            "title": "Dbrand Phone Skins",
+            "image": "./images/products/other/skin.jpg",
+            "price": "Rs. 899",
+            "category": "acc"
+        }
+
+    ]
+}
