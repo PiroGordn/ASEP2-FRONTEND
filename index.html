@@ -19,7 +19,7 @@
 
   <link rel="stylesheet" href="styles.css" />
 
-  <title>P O L A R I S</title>
+  <title>College Store</title>
 </head>
 
 <body>
@@ -37,13 +37,13 @@
 
           <div class="nav__logo">
             <a href="/" class="scroll-link">
-              P O L A R I S
+              COLLEGE STORE
             </a>
           </div>
 
           <div class="nav__menu">
             <div class="menu__top">
-              <span class="nav__category">PHONE</span>
+              <span class="nav__category">MENU</span>
               <a href="#" class="close__toggle">
                 <svg>
                   <use xlink:href="./images/sprite.svg#icon-cross"></use>
@@ -55,13 +55,13 @@
                 <a href="#header" class="nav__link scroll-link">Home</a>
               </li>
               <li class="nav__item">
-                <a href="#latest" class="nav__link scroll-link">Latest</a>
+                <a href="#latest" class="nav__link scroll-link">New Arrivals</a>
               </li>
               <li class="nav__item">
-                <a href="#category" class="nav__link scroll-link">All Products</a>
+                <a href="#category" class="nav__link scroll-link">Categories</a>
               </li>
               <li class="nav__item">
-                <a href="#news" class="nav__link scroll-link"> &nbsp &nbsp &nbsp &nbsp &nbsp News</a>
+                <a href="#news" class="nav__link scroll-link">Campus News</a>
               </li>
               <li class="nav__item">
                 <a href="#contact" class="nav__link scroll-link">Contact</a>
@@ -71,11 +71,76 @@
           </div>
 
           <div class="nav__icons">
-            <a href="#" class="icon__item">
+            <div class="icon__item user-dropdown">
               <svg class="icon__user">
                 <use xlink:href="./images/sprite.svg#icon-user"></use>
               </svg>
-            </a>
+              <div class="dropdown-content">
+                <div id="userContent">
+                  <!-- This will be populated by JavaScript -->
+                  <div id="authButtons" class="auth-buttons">
+                    <a href="#" id="loginButton">Login</a>
+                    <a href="#" id="signupButton">Sign Up</a>
+                  </div>
+                </div>
+                <a href="#" id="signOutButton" style="display: none;">Sign Out</a>
+              </div>
+            </div>
+
+            <!-- Login Modal -->
+            <div id="loginModal" class="modal">
+              <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Login</h2>
+                <form id="loginForm">
+                  <div class="form-group">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                  </div>
+                  <div class="form-group">
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                  </div>
+                  <button type="submit">Login</button>
+                  <div class="or-divider">
+                    <span>OR</span>
+                  </div>
+                  <button type="button" id="googleLoginBtn" class="google-btn">
+                    <img src="https://imgs.search.brave.com/PdE0_txzUdHcbHT5AhV0yUQJQp1HsegZYHyXHuGZ3vs/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy9j/L2MxL0dvb2dsZV8l/MjJHJTIyX2xvZ28u/c3Zn" alt="Google" style="width: 18px; height: 18px; margin-right: 8px;">
+                    Continue with Google
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Sign Up Modal -->
+            <div id="signupModal" class="modal">
+              <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Sign Up</h2>
+                <form id="signupForm">
+                  <div class="form-group">
+                    <input type="email" id="signupEmail" placeholder="Email" required>
+                  </div>
+                  <div class="form-group">
+                    <input type="password" id="signupPassword" placeholder="Password" required>
+                  </div>
+                  <div class="form-group">
+                    <select id="userRole" required>
+                      <option value="">Select Role</option>
+                      <option value="buyer">Buyer</option>
+                      <option value="seller">Seller</option>
+                    </select>
+                  </div>
+                  <button type="submit">Sign Up</button>
+                  <div class="or-divider">
+                    <span>OR</span>
+                  </div>
+                  <button type="button" id="googleSignupBtn" class="google-btn">
+                    <img src="https://imgs.search.brave.com/PdE0_txzUdHcbHT5AhV0yUQJQp1HsegZYHyXHuGZ3vs/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy9j/L2MxL0dvb2dsZV8l/MjJHJTIyX2xvZ28u/c3Zn" alt="Google" style="width: 18px; height: 18px; margin-right: 8px;">
+                    Continue with Google
+                  </button>
+                </form>
+              </div>
+            </div>
 
             <a href="#" class="icon__item">
               <svg class="icon__search">
@@ -87,7 +152,7 @@
               <svg class="icon__cart">
                 <use xlink:href="./images/sprite.svg#icon-shopping-basket"></use>
               </svg>
-              <span id="cart__total">4</span>
+              <span id="cart__total">0</span>
             </a>
           </div>
         </nav>
@@ -102,13 +167,13 @@
             <li class="glide__slide">
               <div class="hero__center">
                 <div class="hero__left">
-                  <h1 class="">PHONES MADE FOR YOU!</h1>
-                  <h4>With better Displays, Cameras, Chipset, Overall Experience.</h4>
+                  <h1>YOUR CAMPUS ESSENTIALS!</h1>
+                  <h4>Everything you need for a successful academic year.</h4>
                   <a href="#category"><button class="hero__btn">SHOP NOW</button></a>
                 </div>
                 <div class="hero__right">
                   <div class="hero__img-container">
-                    <img class="banner_01" src="./images/banner_02.png" height="600" width="auto" alt="banner2" />
+                    <img class="banner_01" src="./images/banner_01.png" alt="Campus Life" />
                   </div>
                 </div>
               </div>
@@ -116,13 +181,12 @@
             <li class="glide__slide">
               <div class="hero__center">
                 <div class="hero__left">
-
-                  <h1>PHONES MADE FOR YOU!</h1>
-                  <h4>With better Displays, Cameras, Chipset, Overall Experience.</h4>
-                  <a href="#category"><button class="hero__btn">SHOP NOW</button></a>
+                  <h1>GEAR UP FOR SUCCESS!</h1>
+                  <h4>Textbooks, Tech, and Everything in Between.</h4>
+                  <a href="#category"><button class="hero__btn">EXPLORE NOW</button></a>
                 </div>
                 <div class="hero__right">
-                  <img class="banner_02" src="./images/banner_01.png" height="600" width="auto" alt="banner2" />
+                  <img class="banner_02" src="./images/banner_02.png" alt="Study Materials" />
                 </div>
               </div>
             </li>
@@ -154,39 +218,79 @@
   <!-- Main -->
   <main id="main">
     <div class="container">
-      <!-- Collection -->
+      <!-- Commented out Category Section
       <section class="category__section section" id="#">
-
-
         <div class="collection__container" data-aos="fade-down" data-aos-duration="1200">
           <div class="collection__box">
             <div class="img__container">
-              <img class="collection_02" src="./images/collection_02.png" alt="">
+              <img src="./images/textbooks.png" alt="Textbooks">
             </div>
-            <div class="collection__content">
-              <div class="collection__data">
-                <span>Explore The All New</span>
-                <h1>ANDROID 12</h1>
-                <span>With The Samsung S22 Ulra, Oneplus 10 & Xiaomi 12S Ultra.</span>
-                <br>
-                <a href="#category">SHOP NOW</a>
-              </div>
+            <div class="collection__data">
+              <span>New Semester Essentials</span>
+              <h1>TEXTBOOKS</h1>
+              <span>Find all your required course materials in one place.</span>
+              <br>
+              <a href="#category">SHOP NOW</a>
             </div>
           </div>
           <div class="collection__box">
             <div class="img__container">
-              <img class="collection_01" src="./images/collection_01.png" alt="">
+              <img src="./images/gadgets.png" alt="Tech Gadgets">
             </div>
-            <div class="collection__content">
-              <div class="collection__data">
-                <span>Explore The All New</span>
-                <h1>iOS 16</h1>
-                <span>With The iPhone 14 & iPhone 13 lineups.</span>
-                <br>
-                <a href="#category">SHOP NOW</a>
-              </div>
+            <div class="collection__data">
+              <span>Tech Essentials</span>
+              <h1>GADGETS</h1>
+              <span>Latest tech to power your studies.</span>
+              <br>
+              <a href="#category">EXPLORE NOW</a>
             </div>
           </div>
+        </div>
+      </section>
+      -->
+      <!-- Categories -->
+      <section class="section" id="category">
+        <div class="title__container" data-aos="fade-down" data-aos-duration="1200">
+          <div class="section__titles">
+            <div class="section__title filter-btn active" data-id="All Products">
+              <span class="dot"></span>
+              <h1 class="primary__title">All Products</h1>
+            </div>
+          </div>
+          <div class="section__titles">
+            <div class="section__title filter-btn" data-id="Stationery">
+              <span class="dot"></span>
+              <h1 class="primary__title">Stationery and Notebooks</h1>
+            </div>
+          </div>
+          <div class="section__titles">
+            <div class="section__title filter-btn" data-id="PDFs">
+              <span class="dot"></span>
+              <h1 class="primary__title">PDFs</h1>
+            </div>
+          </div>
+          <div class="section__titles">
+            <div class="section__title filter-btn" data-id="Electronics">
+              <span class="dot"></span>
+              <h1 class="primary__title">Electronics</h1>
+            </div>
+          </div>
+          <div class="section__titles">
+            <div class="section__title filter-btn" data-id="Notes">
+              <span class="dot"></span>
+              <h1 class="primary__title">Notes (Digital/Handwritten)</h1>
+            </div>
+          </div>
+          <div class="section__titles">
+            <div class="section__title filter-btn" data-id="Textbooks">
+              <span class="dot"></span>
+              <h1 class="primary__title">Textbooks</h1>
+            </div>
+          </div>
+        </div>
+        <div class="category__center container" data-aos="fade-up" data-aos-duration="1200">
+          <!-- Products will be dynamically loaded here -->
+        </div>
       </section>
 
       <!-- Latest Products -->
@@ -708,104 +812,49 @@
         </div>
       </section>
 
-
-
-      <section class="category__section section" id="category">
-        <div class="category__container" data-aos="fade-down" data-aos-duration="1200">
-          <div class="tab__list">
-
-            <div class="title__container tabs">
-              <div class="section__titles category__titles ">
-                <div class="section__title filter-btn active" data-id="All Products">
-                  <span class="dot"></span>
-                  <h1 class="primary__title">All Products (by price)</h1>
-                </div>
+      <!-- Facility Section -->
+      <section class="facility__section section" id="facility">
+        <div class="container">
+          <div class="facility__contianer" data-aos="fade-up" data-aos-duration="1200">
+            <div class="facility__box">
+              <div class="facility-img__container">
+                <svg>
+                  <use xlink:href="./images/sprite.svg#icon-airplane"></use>
+                </svg>
               </div>
-              <div class="section__titles">
-
-                <div class="section__title filter-btn" data-id="Android">
-                  <span class="dot"></span>
-                  <h1 class="primary__title">Android</h1>
-                </div>
-              </div>
-
-              <div class="section__titles">
-                <div class="section__title filter-btn" data-id="iOS">
-                  <span class="dot"></span>
-                  <h1 class="primary__title">iOS</h1>
-                </div>
-              </div>
-
-              <div class="section__titles">
-                <div class="section__title filter-btn" data-id="acc">
-                  <span class="dot"></span>
-                  <h1 class="primary__title">Accessories</h1>
-                </div>
-              </div>
-
+              <p>FREE SHIPPING WORLD WIDE</p>
             </div>
-          </div>
-          <div class="category__container" data-aos="fade-up" data-aos-duration="1200">
-            <div class="category__center"></div>
+
+            <div class="facility__box">
+              <div class="facility-img__container">
+                <svg>
+                  <use xlink:href="./images/sprite.svg#icon-credit-card-alt"></use>
+                </svg>
+              </div>
+              <p>MANY PAYMENT GATWAYS</p>
+            </div>
+
+            <div class="facility__box">
+              <div class="facility-img__container">
+                <svg>
+                  <use xlink:href="./images/sprite.svg#icon-credit-card"></use>
+                </svg>
+              </div>
+              <p>UPI | Net Banking | Card Payments</p>
+            </div>
+
+            <div class="facility__box">
+              <div class="facility-img__container">
+                <svg>
+                  <use xlink:href="./images/sprite.svg#icon-headphones"></use>
+                </svg>
+              </div>
+              <p>24/7 ONLINE SUPPORT</p>
+            </div>
           </div>
         </div>
+      </section>
     </div>
-    </section>
-
-    <!-- Facility Section -->
-    <section class="facility__section section" id="facility">
-      <div class="container">
-        <div class="facility__contianer" data-aos="fade-up" data-aos-duration="1200">
-          <div class="facility__box">
-            <div class="facility-img__container">
-              <svg>
-                <use xlink:href="./images/sprite.svg#icon-airplane"></use>
-              </svg>
-            </div>
-            <p>FREE SHIPPING WORLD WIDE</p>
-          </div>
-
-          <div class="facility__box">
-            <div class="facility-img__container">
-              <svg>
-                <use xlink:href="./images/sprite.svg#icon-credit-card-alt"></use>
-              </svg>
-            </div>
-            <p>MANY PAYMENT GATWAYS</p>
-          </div>
-
-          <div class="facility__box">
-            <div class="facility-img__container">
-              <svg>
-                <use xlink:href="./images/sprite.svg#icon-credit-card"></use>
-              </svg>
-            </div>
-            <p>UPI | Net Banking | Card Payments</p>
-          </div>
-
-          <div class="facility__box">
-            <div class="facility-img__container">
-              <svg>
-                <use xlink:href="./images/sprite.svg#icon-headphones"></use>
-              </svg>
-            </div>
-            <p>24/7 ONLINE SUPPORT</p>
-          </div>
-        </div>
-      </div>
-    </section>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
 
     <!--New Section  -->
     <section class="section news" id="news">
@@ -830,8 +879,8 @@
                       </div>
                       <div class="card__footer">
                         <h3>iPhones are moving to USB-C measure next year. </h3>
-                        <p>Apple will make the jump to USB-C with next year’s iPhone 15 series – Bloomberg analyst Mark
-                          Gurman is certain of it, writing “the iPhone 15 is essentially a lock to get USB-C in the fall
+                        <p>Apple will make the jump to USB-C with next year's iPhone 15 series – Bloomberg analyst Mark
+                          Gurman is certain of it, writing "the iPhone 15 is essentially a lock to get USB-C in the fall
                           of 2023.</p>
                         <br>
                         <br>
@@ -972,7 +1021,7 @@
     </section>
     <!-- End Footer -->
 
-    <!-- PopUp -->
+    <!-- Commented out Popup Section
     <div class="popup hide__popup">
       <div class="popup__content">
         <div class="popup__close">
@@ -998,6 +1047,7 @@
         </div>
       </div>
     </div>
+    -->
 
     <!-- Go To -->
 
@@ -1017,6 +1067,14 @@
     <script src="./js/products.js"></script>
     <script src="./js/index.js"></script>
     <script src="./js/slider.js"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Auth JavaScript -->
+    <script src="./js/auth.js"></script>
 
 </body>
 
