@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Seller Dashboard - College Store</title>
+</head>
+
+<body>
+  <header id="header" class="header">
+    <div class="navigation">
+      <div class="container">
+        <nav class="nav">
+          <div class="nav__hamburger">
+            <svg>
+              <use xlink:href="./images/sprite.svg#icon-menu"></use>
+            </svg>
+          </div>
+
+          <div class="nav__logo">
+            <a href="/" class="scroll-link">
+              COLLEGE STORE
+            </a>
+          </div>
+
+          <div class="nav__menu">
+            <div class="menu__top">
+              <span class="nav__category">MENU</span>
+              <a href="#" class="close__toggle">
+                <svg>
+                  <use xlink:href="./images/sprite.svg#icon-cross"></use>
+                </svg>
+              </a>
+            </div>
+            <ul class="nav__list">
+              <li class="nav__item">
+                <a href="#dashboard" class="nav__link scroll-link">Dashboard</a>
+              </li>
+              <li class="nav__item">
+                <a href="#products" class="nav__link scroll-link">My Products</a>
+              </li>
+              <li class="nav__item">
+                <a href="#orders" class="nav__link scroll-link">Orders</a>
+              </li>
+              <li class="nav__item">
+                <a href="#analytics" class="nav__link scroll-link">Analytics</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="nav__icons">
+            <div class="icon__item user-dropdown">
+              <svg class="icon__user">
+                <use xlink:href="./images/sprite.svg#icon-user"></use>
+              </svg>
+              <div class="dropdown-content">
+                <div class="user-info">
+                  <img src="./images/default-avatar.png" alt="Profile" class="profile-pic" id="userProfilePic">
+                  <div class="user-details">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="user-role" id="userRole">Loading...</span>
+                  </div>
+                </div>
+                <button type="button" id="signOutButton" onclick="handleSignOut()">Sign Out</button>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <section class="dashboard__section" id="dashboard">
+        <div class="dashboard__header">
+          <h1>Seller Dashboard</h1>
+          <p>Manage your products and track your sales</p>
+          <button id="addProductBtn" class="primary-btn">Add New Product</button>
+        </div>
+
+        <div class="dashboard__stats">
+          <div class="stat__card">
+            <h3>Total Products</h3>
+            <p id="totalProducts">0</p>
+          </div>
+          <div class="stat__card">
+            <h3>Active Orders</h3>
+            <p id="activeOrders">0</p>
+          </div>
+          <div class="stat__card">
+            <h3>Total Sales</h3>
+            <p id="totalSales">₹0</p>
+          </div>
+        </div>
+
+        <section class="products__section" id="products">
+          <h2>My Products</h2>
+          <div class="products__filters">
+            <select id="categoryFilter">
+              <option value="all">All Categories</option>
+              <option value="Stationery">Stationery</option>
+              <option value="PDFs">PDFs</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Notes">Notes</option>
+              <option value="Textbooks">Textbooks</option>
+            </select>
+            <select id="statusFilter">
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="outOfStock">Out of Stock</option>
+            </select>
+            <button id="addProductBtn" class="primary-btn">+ Add Product</button>
+          </div>
+          <div id="productsList" class="products__container">
+            <!-- Products will be populated by JavaScript -->
+          </div>
+        </section>
+
+        <section class="orders__section" id="orders">
+          <h2>Recent Orders</h2>
+          <div id="ordersList" class="orders__container">
+            <!-- Orders will be populated by JavaScript -->
+          </div>
+        </section>
+
+        <section class="analytics__section" id="analytics">
+          <h2>Analytics</h2>
+          <div class="analytics__cards">
+            <div class="analytics__card">
+              <h3>Top Selling Products</h3>
+              <div id="topProducts">
+                <!-- Top products will be populated by JavaScript -->
+              </div>
+            </div>
+            <div class="analytics__card">
+              <h3>Sales Trend</h3>
+              <div id="salesChart">
+                <!-- Sales chart will be populated by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="addProductModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Add New Product</h2>
+        <form id="addProductForm">
+          <div class="form-group">
+            <input type="text" id="productName" placeholder="Product Name" required>
+          </div>
+          <div class="form-group">
+            <textarea id="productDescription" placeholder="Product Description" rows="4" required></textarea>
+          </div>
+          <div class="form-group">
+            <input type="number" id="productPrice" placeholder="Price (₹)" min="0" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <select id="productCategory" required>
+              <option value="">Select Category</option>
+              <option value="Stationery">Stationery</option>
+              <option value="PDFs">PDFs</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Notes">Notes</option>
+              <option value="Textbooks">Textbooks</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <input type="number" id="productStock" placeholder="Stock Quantity" min="0" required>
+          </div>
+          <div class="form-group">
+            <input type="text" id="productImageUrl" placeholder="Image URL" required>
+          </div>
+          <div class="form-group">
+            <label for="productCondition">Condition (if applicable):</label>
+            <select id="productCondition">
+              <option value="new">New</option>
+              <option value="likeNew">Like New</option>
+              <option value="good">Good</option>
+              <option value="fair">Fair</option>
+              <option value="na">Not Applicable</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="productTags">Tags (comma-separated):</label>
+            <input type="text" id="productTags" placeholder="e.g., engineering, first-year, mathematics">
+          </div>
+          <button type="submit" class="primary-btn">Add Product</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer" class="section footer">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__content">
+          <h3>EXTRAS</h3>
+          <ul>
+            <li><a href="#">Brands</a></li>
+            <li><a href="#">Gift Certificates</a></li>
+            <li><a href="#">Affiliate</a></li>
+            <li><a href="#">Specials</a></li>
+          </ul>
+        </div>
+        <div class="footer__content">
+          <h3>INFORMATION</h3>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms & Conditions</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__copyright">
+        <p>&copy; 2024 College Store. All Rights Reserved</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+  
+  <!-- Custom Scripts -->
+  <script src="./js/auth.js"></script>
+  <script src="./js/seller-dashboard.js"></script>
+</body>
+
+</html> 

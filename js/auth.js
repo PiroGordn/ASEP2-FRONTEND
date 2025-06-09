@@ -8,7 +8,7 @@ const firebaseConfig = {
     messagingSenderId: "893765003498",
     appId: "1:893765003498:web:7d7d63840848218f26cf93",
     measurementId: "G-SRV0DX0DV5"
-  };
+};
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
@@ -19,180 +19,239 @@ const db = firebase.firestore();
 const loginButton = document.getElementById('loginButton');
 const signupButton = document.getElementById('signupButton');
 const signOutButton = document.getElementById('signOutButton');
-const userContent = document.getElementById('userContent');
 const loginModal = document.getElementById('loginModal');
 const signupModal = document.getElementById('signupModal');
 const loginForm = document.getElementById('loginForm');
 const signupForm = document.getElementById('signupForm');
 const googleLoginBtn = document.getElementById('googleLoginBtn');
 const googleSignupBtn = document.getElementById('googleSignupBtn');
+const roleSelect = document.getElementById('signupRole');
+
+// Modal handling
+function openModal(modal) {
+    if (modal) modal.style.display = 'block';
+}
+
+function closeModal(modal) {
+    if (modal) modal.style.display = 'none';
+}
 
 // Close buttons for modals
 document.querySelectorAll('.close').forEach(button => {
-  button.onclick = function() {
-    loginModal.style.display = 'none';
-    signupModal.style.display = 'none';
-  }
+    button.onclick = function() {
+        closeModal(loginModal);
+        closeModal(signupModal);
+    }
 });
 
 // When clicking outside of a modal, close it
 window.onclick = function(event) {
-  if (event.target == loginModal || event.target == signupModal) {
-    loginModal.style.display = 'none';
-    signupModal.style.display = 'none';
-  }
+    if (event.target === loginModal || event.target === signupModal) {
+        closeModal(loginModal);
+        closeModal(signupModal);
+    }
 }
 
 // Show login modal
-loginButton.onclick = function(e) {
-  e.preventDefault();
-  loginModal.style.display = 'block';
+if (loginButton) {
+    loginButton.onclick = function(e) {
+        e.preventDefault();
+        openModal(loginModal);
+    }
 }
 
 // Show signup modal
-signupButton.onclick = function(e) {
-  e.preventDefault();
-  signupModal.style.display = 'block';
+if (signupButton) {
+    signupButton.onclick = function(e) {
+        e.preventDefault();
+        openModal(signupModal);
+    }
 }
 
 // Email/Password Login
-loginForm.onsubmit = function(e) {
-  e.preventDefault();
-  const email = document.getElementById('loginEmail').value;
-  const password = document.getElementById('loginPassword').value;
+if (loginForm) {
+    loginForm.onsubmit = function(e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
 
-  auth.signInWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      loginModal.style.display = 'none';
-      loginForm.reset();
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
+        auth.signInWithEmailAndPassword(email, password)
+            .then(() => {
+                closeModal(loginModal);
+                loginForm.reset();
+            })
+            .catch((error) => {
+                alert(error.message);
+            });
+    }
 }
 
 // Email/Password Sign Up
-signupForm.onsubmit = function(e) {
-  e.preventDefault();
-  const email = document.getElementById('signupEmail').value;
-  const password = document.getElementById('signupPassword').value;
-  const role = document.getElementById('userRole').value;
+if (signupForm) {
+    signupForm.onsubmit = function(e) {
+        e.preventDefault();
+        const email = document.getElementById('signupEmail').value;
+        const password = document.getElementById('signupPassword').value;
+        const role = roleSelect.value;
 
-  if (!role) {
-    alert('Please select a role (Buyer or Seller)');
-    return;
-  }
+        if (!role) {
+            alert('Please select a role (Buyer or Seller)');
+            return;
+        }
 
-  auth.createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      // Store user role in Firestore
-      return db.collection('users').doc(userCredential.user.uid).set({
-        email: email,
-        role: role,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    })
-    .then(() => {
-      signupModal.style.display = 'none';
-      signupForm.reset();
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
+        auth.createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                return db.collection('users').doc(userCredential.user.uid).set({
+                    email: email,
+                    role: role,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            })
+            .then(() => {
+                closeModal(signupModal);
+                signupForm.reset();
+            })
+            .catch((error) => {
+                alert(error.message);
+            });
+    }
 }
 
 // Google Sign In
 async function signInWithGoogle(isSignup = false) {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  try {
-    const result = await auth.signInWithPopup(provider);
-    
-    if (isSignup) {
-      const role = document.getElementById('userRole').value;
-      if (!role) {
-        alert('Please select a role (Buyer or Seller)');
-        // Sign out the user if they haven't selected a role
-        await auth.signOut();
-        return;
-      }
-      
-      // Store user role in Firestore
-      await db.collection('users').doc(result.user.uid).set({
-        email: result.user.email,
-        role: role,
-        displayName: result.user.displayName,
-        photoURL: result.user.photoURL,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    } else {
-      // Check if user exists in Firestore
-      const userDoc = await db.collection('users').doc(result.user.uid).get();
-      if (!userDoc.exists) {
-        alert('Please sign up first to select your role');
-        await auth.signOut();
-        return;
-      }
+    const provider = new firebase.auth.GoogleAuthProvider();
+    try {
+        const result = await auth.signInWithPopup(provider);
+        
+        if (isSignup) {
+            const signupRoleSelect = document.querySelector('#signupModal #signupRole');
+            const role = signupRoleSelect ? signupRoleSelect.value : '';
+            
+            if (!role) {
+                alert('Please select a role (Buyer or Seller)');
+                await auth.signOut();
+                return;
+            }
+            
+            await db.collection('users').doc(result.user.uid).set({
+                email: result.user.email,
+                role: role,
+                displayName: result.user.displayName,
+                photoURL: result.user.photoURL,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        } else {
+            const userDoc = await db.collection('users').doc(result.user.uid).get();
+            if (!userDoc.exists) {
+                alert('Please sign up first to select your role');
+                await auth.signOut();
+                return;
+            }
+        }
+        
+        closeModal(loginModal);
+        closeModal(signupModal);
+    } catch (error) {
+        alert(error.message);
     }
-    
-    loginModal.style.display = 'none';
-    signupModal.style.display = 'none';
-  } catch (error) {
-    alert(error.message);
-  }
 }
 
-googleLoginBtn.onclick = () => signInWithGoogle(false);
-googleSignupBtn.onclick = () => signInWithGoogle(true);
+if (googleLoginBtn) googleLoginBtn.onclick = () => signInWithGoogle(false);
+if (googleSignupBtn) googleSignupBtn.onclick = () => signInWithGoogle(true);
 
-// Sign out
-signOutButton.onclick = function(e) {
-  e.preventDefault();
-  auth.signOut();
+// Sign out handler
+function handleSignOut() {
+    auth.signOut().then(() => {
+        window.location.href = '/index.html';
+    }).catch((error) => {
+        console.error('Error signing out:', error);
+    });
 }
+
+// Make handleSignOut available globally
+window.handleSignOut = handleSignOut;
 
 // Auth state observer
 auth.onAuthStateChanged(async (user) => {
-  if (user) {
-    try {
-      // Get user role from Firestore
-      const userDoc = await db.collection('users').doc(user.uid).get();
-      const userData = userDoc.data();
-      
-      // Update UI
-      const authButtons = document.getElementById('authButtons');
-      if (authButtons) authButtons.style.display = 'none';
-      signOutButton.style.display = 'block';
-      
-      userContent.innerHTML = `
-        <div class="user-info">
-          <img src="${user.photoURL || './images/default-avatar.png'}" alt="Profile" class="profile-pic">
-          <div class="user-details">
-            <span class="user-name">${user.displayName || user.email}</span>
-            <span class="user-role">${userData?.role || 'Role not set'}</span>
-          </div>
-        </div>
-      `;
-    } catch (error) {
-      console.error("Error fetching user data:", error);
+    if (user) {
+        try {
+            // Get user role from Firestore
+            const userDoc = await db.collection('users').doc(user.uid).get();
+            const userData = userDoc.data();
+            
+            // Add logged-in class to body
+            document.body.classList.add('logged-in');
+            
+            // Update UI elements
+            const userProfilePic = document.getElementById('userProfilePic');
+            const userName = document.getElementById('userName');
+            const userRoleDisplay = document.querySelector('.user-role');
+            
+            // Update profile elements if they exist
+            if (userProfilePic) {
+                userProfilePic.src = user.photoURL || '/images/default-avatar.png';
+                userProfilePic.alt = user.displayName || user.email;
+            }
+            
+            if (userName) {
+                userName.textContent = user.displayName || user.email;
+            }
+            
+            if (userRoleDisplay && userData) {
+                userRoleDisplay.textContent = userData.role || 'Role not set';
+            }
+
+            // Check if we should skip redirection
+            const urlParams = new URLSearchParams(window.location.search);
+            const noRedirect = urlParams.get('noRedirect') === 'true';
+
+            // Handle redirects only if noRedirect is false
+            if (!noRedirect) {
+                const currentPath = window.location.pathname;
+                if (currentPath === '/' || currentPath === '/index.html') {
+                    if (userData?.role === 'buyer') {
+                        window.location.href = '/buyer-dashboard.html';
+                    } else if (userData?.role === 'seller') {
+                        window.location.href = '/seller-dashboard.html';
+                    }
+                } else if (currentPath === '/buyer-dashboard.html' && userData?.role !== 'buyer') {
+                    window.location.href = '/seller-dashboard.html';
+                } else if (currentPath === '/seller-dashboard.html' && userData?.role !== 'seller') {
+                    window.location.href = '/buyer-dashboard.html';
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+            // Update UI to show error state
+            const userName = document.getElementById('userName');
+            const userRoleDisplay = document.querySelector('.user-role');
+            if (userName) userName.textContent = 'Error loading user';
+            if (userRoleDisplay) userRoleDisplay.textContent = 'Please refresh';
+        }
+    } else {
+        // User is signed out
+        document.body.classList.remove('logged-in');
+        
+        // Reset UI elements
+        const userProfilePic = document.getElementById('userProfilePic');
+        const userName = document.getElementById('userName');
+        const userRoleDisplay = document.querySelector('.user-role');
+        
+        if (userProfilePic) {
+            userProfilePic.src = '/images/default-avatar.png';
+            userProfilePic.alt = 'Profile';
+        }
+        
+        if (userName) {
+            userName.textContent = 'Not logged in';
+        }
+        
+        if (userRoleDisplay) {
+            userRoleDisplay.textContent = 'Please log in';
+        }
+
+        // Close any open modals
+        closeModal(loginModal);
+        closeModal(signupModal);
     }
-  } else {
-    // User is signed out
-    userContent.innerHTML = `
-      <div id="authButtons" class="auth-buttons">
-        <a href="#" id="loginButton">Login</a>
-        <a href="#" id="signupButton">Sign Up</a>
-      </div>
-    `;
-    signOutButton.style.display = 'none';
-    
-    // Reattach event listeners
-    document.getElementById('loginButton').onclick = function(e) {
-      e.preventDefault();
-      loginModal.style.display = 'block';
-    }
-    document.getElementById('signupButton').onclick = function(e) {
-      e.preventDefault();
-      signupModal.style.display = 'block';
-    }
-  }
 }); 

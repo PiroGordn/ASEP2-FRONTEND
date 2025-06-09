@@ -76,14 +76,18 @@
                 <use xlink:href="./images/sprite.svg#icon-user"></use>
               </svg>
               <div class="dropdown-content">
-                <div id="userContent">
-                  <!-- This will be populated by JavaScript -->
-                  <div id="authButtons" class="auth-buttons">
-                    <a href="#" id="loginButton">Login</a>
-                    <a href="#" id="signupButton">Sign Up</a>
+                <div class="user-info">
+                  <img src="./images/default-avatar.png" alt="Profile" class="profile-pic" id="userProfilePic">
+                  <div class="user-details">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="user-role" id="userRole">Loading...</span>
                   </div>
                 </div>
-                <a href="#" id="signOutButton" style="display: none;">Sign Out</a>
+                <button type="button" id="signOutButton" onclick="handleSignOut()">Sign Out</button>
+                <div id="authButtons" class="auth-buttons">
+                  <button type="button" id="loginButton">Login</button>
+                  <button type="button" id="signupButton">Sign Up</button>
+                </div>
               </div>
             </div>
 
@@ -124,7 +128,7 @@
                     <input type="password" id="signupPassword" placeholder="Password" required>
                   </div>
                   <div class="form-group">
-                    <select id="userRole" required>
+                    <select id="signupRole" name="role" required>
                       <option value="">Select Role</option>
                       <option value="buyer">Buyer</option>
                       <option value="seller">Seller</option>
@@ -1063,11 +1067,6 @@
     <!-- Animate On Scroll -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <!-- Custom JavaScript -->
-    <script src="./js/products.js"></script>
-    <script src="./js/index.js"></script>
-    <script src="./js/slider.js"></script>
-
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -1075,6 +1074,9 @@
     
     <!-- Auth JavaScript -->
     <script src="./js/auth.js"></script>
+    <script src="./js/products.js"></script>
+    <script src="./js/index.js"></script>
+    <script src="./js/slider.js"></script>
 
 </body>
 

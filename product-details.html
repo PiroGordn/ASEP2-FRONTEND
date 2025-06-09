@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Product Details - College Store</title>
+</head>
+
+<body>
+  <header id="header" class="header">
+    <div class="navigation">
+      <div class="container">
+        <nav class="nav">
+          <div class="nav__hamburger">
+            <svg>
+              <use xlink:href="./images/sprite.svg#icon-menu"></use>
+            </svg>
+          </div>
+
+          <div class="nav__logo">
+            <a href="/" class="scroll-link">
+              COLLEGE STORE
+            </a>
+          </div>
+
+          <div class="nav__menu">
+            <div class="menu__top">
+              <span class="nav__category">MENU</span>
+              <a href="#" class="close__toggle">
+                <svg>
+                  <use xlink:href="./images/sprite.svg#icon-cross"></use>
+                </svg>
+              </a>
+            </div>
+            <ul class="nav__list">
+              <li class="nav__item">
+                <a href="index.html?noRedirect=true#header" class="nav__link">Home</a>
+              </li>
+              <li class="nav__item">
+                <a href="index.html#category" class="nav__link">Categories</a>
+              </li>
+              <li class="nav__item">
+                <a href="index.html#news" class="nav__link">Campus News</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="nav__icons">
+            <div class="icon__item user-dropdown">
+              <svg class="icon__user">
+                <use xlink:href="./images/sprite.svg#icon-user"></use>
+              </svg>
+              <div class="dropdown-content">
+                <div class="user-info">
+                  <img src="./images/default-avatar.png" alt="Profile" class="profile-pic" id="userProfilePic">
+                  <div class="user-details">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="user-role" id="userRole">Loading...</span>
+                  </div>
+                </div>
+                <button type="button" id="signOutButton" onclick="handleSignOut()">Sign Out</button>
+              </div>
+            </div>
+
+            <a href="cart.html" class="icon__item">
+              <svg class="icon__cart">
+                <use xlink:href="./images/sprite.svg#icon-shopping-basket"></use>
+              </svg>
+              <span id="cart__total">0</span>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <section class="product-details">
+        <div class="product-details__wrapper">
+          <div class="product-details__left">
+            <div class="product-details__image">
+              <img id="productImage" src="" alt="Product Image">
+            </div>
+            <div class="product-details__seller">
+              <h3>Seller Information</h3>
+              <div class="seller-info">
+                <img id="sellerProfilePic" src="./images/default-avatar.png" alt="Seller Profile">
+                <div class="seller-details">
+                  <span id="sellerName">Loading...</span>
+                  <span id="sellerRating">Rating: N/A</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="product-details__right">
+            <span class="product-category" id="productCategory"></span>
+            <h1 id="productName"></h1>
+            <div class="product-rating">
+              <div class="stars" id="productRating">
+                <!-- Stars will be populated by JavaScript -->
+              </div>
+              <span id="reviewCount">(0 reviews)</span>
+            </div>
+            <div class="product-price">
+              <h2 id="productPrice">₹0</h2>
+              <span id="stockStatus" class="stock-status">In Stock</span>
+            </div>
+            <div class="product-condition">
+              <span>Condition: </span>
+              <span id="productCondition">New</span>
+            </div>
+            <div class="product-description">
+              <h3>Description</h3>
+              <p id="productDescription"></p>
+            </div>
+            <div class="product-tags">
+              <h3>Tags</h3>
+              <div id="productTags" class="tags-container">
+                <!-- Tags will be populated by JavaScript -->
+              </div>
+            </div>
+            <div class="product-actions">
+              <div class="quantity-selector">
+                <button id="decreaseQuantity">-</button>
+                <input type="number" id="quantity" value="1" min="1">
+                <button id="increaseQuantity">+</button>
+              </div>
+              <button id="addToCartBtn" class="primary-btn">Add to Cart</button>
+              <button id="addToWishlistBtn" class="secondary-btn">
+                <svg>
+                  <use xlink:href="./images/sprite.svg#icon-heart-o"></use>
+                </svg>
+                Add to Wishlist
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-reviews">
+          <h2>Customer Reviews</h2>
+          <div id="reviewsList">
+            <!-- Reviews will be populated by JavaScript -->
+          </div>
+          <div id="addReviewForm" class="review-form" style="display: none;">
+            <h3>Write a Review</h3>
+            <form id="reviewForm">
+              <div class="form-group">
+                <label for="rating">Rating:</label>
+                <div class="rating-input">
+                  <input type="number" id="rating" min="1" max="5" required>
+                  <span>/5</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="reviewText">Your Review:</label>
+                <textarea id="reviewText" rows="4" required></textarea>
+              </div>
+              <button type="submit" class="primary-btn">Submit Review</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer id="footer" class="section footer">
+    <!-- Footer content same as index.html -->
+  </footer>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  
+  <!-- Custom JavaScript -->
+  <script src="./js/auth.js"></script>
+  <script src="./js/product-details.js"></script>
+</body>
+
+</html> 

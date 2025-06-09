@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <link rel="stylesheet" href="./styles.css" />
+  <title>Buyer Dashboard - College Store</title>
+</head>
+
+<body>
+  <header id="header" class="header">
+    <div class="navigation">
+      <div class="container">
+        <nav class="nav">
+          <div class="nav__hamburger">
+            <svg>
+              <use xlink:href="./images/sprite.svg#icon-menu"></use>
+            </svg>
+          </div>
+
+          <div class="nav__logo">
+            <a href="/" class="scroll-link">
+              COLLEGE STORE
+            </a>
+          </div>
+
+          <div class="nav__menu">
+            <div class="menu__top">
+              <span class="nav__category">MENU</span>
+              <a href="#" class="close__toggle">
+                <svg>
+                  <use xlink:href="./images/sprite.svg#icon-cross"></use>
+                </svg>
+              </a>
+            </div>
+            <ul class="nav__list">
+              <li class="nav__item">
+                <a href="#dashboard" class="nav__link scroll-link">Dashboard</a>
+              </li>
+              <li class="nav__item">
+                <a href="#orders" class="nav__link scroll-link">My Orders</a>
+              </li>
+              <li class="nav__item">
+                <a href="#wishlist" class="nav__link scroll-link">My Wishlist</a>
+              </li>
+              <li class="nav__item">
+                <a href="./index.html?noRedirect=true#category" class="nav__link">Browse Products</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="nav__icons">
+            <div class="icon__item user-dropdown">
+              <svg class="icon__user">
+                <use xlink:href="./images/sprite.svg#icon-user"></use>
+              </svg>
+              <div class="dropdown-content">
+                <div class="user-info">
+                  <img src="./images/default-avatar.png" alt="Profile" class="profile-pic" id="userProfilePic">
+                  <div class="user-details">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="user-role" id="userRole">Loading...</span>
+                  </div>
+                </div>
+                <button type="button" id="signOutButton" onclick="handleSignOut()">Sign Out</button>
+              </div>
+            </div>
+
+            <a href="./cart.html" class="icon__item">
+              <svg class="icon__cart">
+                <use xlink:href="./images/sprite.svg#icon-shopping-basket"></use>
+              </svg>
+              <span id="cart__total">0</span>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <section class="dashboard__section" id="dashboard">
+        <div class="dashboard__header">
+          <h1>Welcome to Your Buyer Dashboard</h1>
+          <p>Find everything you need for your college journey</p>
+          <div class="dashboard__actions">
+            <a href="./index.html?noRedirect=true#category" class="primary-btn">Browse Products</a>
+          </div>
+        </div>
+
+        <div class="dashboard__stats">
+          <div class="stat__card">
+            <h3>Active Orders</h3>
+            <p id="activeOrders">0</p>
+          </div>
+          <div class="stat__card">
+            <h3>Recent Purchases</h3>
+            <p id="recentPurchases">0</p>
+          </div>
+        </div>
+
+        <section class="recent__orders">
+          <h2>Recent Orders</h2>
+          <div id="ordersList" class="orders__container">
+            <!-- Orders will be populated by JavaScript -->
+          </div>
+        </section>
+      </section>
+
+      <!-- New Wishlist Section -->
+      <section class="wishlist__section" id="wishlist">
+        <div class="section__title">
+          <h2>My Wishlist</h2>
+        </div>
+        <div id="wishlistGrid" class="product__grid">
+          <!-- Wishlist items will be populated by JavaScript -->
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer id="footer" class="section footer">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__content">
+          <h3>EXTRAS</h3>
+          <ul>
+            <li><a href="#">Brands</a></li>
+            <li><a href="#">Gift Certificates</a></li>
+            <li><a href="#">Affiliate</a></li>
+            <li><a href="#">Specials</a></li>
+          </ul>
+        </div>
+        <div class="footer__content">
+          <h3>INFORMATION</h3>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms & Conditions</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__copyright">
+        <p>&copy; 2024 College Store. All Rights Reserved</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  
+  <!-- Animate On Scroll -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <!-- Custom Scripts -->
+  <script src="./js/auth.js"></script>
+  <script src="./js/buyer-dashboard.js"></script>
+</body>
+
+</html> 

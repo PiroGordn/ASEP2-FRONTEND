@@ -1,11 +1,17 @@
+// Get products from Firebase
 const getProducts = async () => {
   try {
-    const results = await fetch("./data/products.json");
-    const data = await results.json();
-    const products = data.products;
-    return products;
+    const productsSnapshot = await db.collection('products')
+      .where('status', '==', 'active')
+      .get();
+    
+    return productsSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
   } catch (err) {
-    console.log(err);
+    console.error('Error fetching products:', err);
+    return [];
   }
 };
 
@@ -24,12 +30,12 @@ window.addEventListener("DOMContentLoaded", async function () {
 const displayProductItems = items => {
   let displayProduct = items.map(
     product => ` 
-                  <div class="product category__products">
+                  <div class="product category__products" data-id="${product.id}">
                     <div class="product__header">
-                      <img src=${product.image} alt="product">
+                      <img src="${product.imageUrl}" alt="${product.name}">
                     </div>
                     <div class="product__footer">
-                      <h3>${product.title}</h3>
+                      <h3>${product.name}</h3>
                       <div class="rating">
                         <svg>
                           <use xlink:href="./images/sprite.svg#icon-star-full"></use>
@@ -48,20 +54,20 @@ const displayProductItems = items => {
                         </svg>
                       </div>
                       <div class="product__price">
-                        <h4>${product.price}</h4>
+                        <h4>₹${product.price}</h4>
                       </div>
                       <a href="#"><button type="submit" class="product__btn">Add To Cart</button></a>
                     </div>
                   <ul>
                       <li>
-                        <a data-tip="Quick View" data-place="left" href="#">
+                        <a data-tip="Quick View" data-place="left" href="product-details.html?id=${product.id}">
                           <svg>
                             <use xlink:href="./images/sprite.svg#icon-eye"></use>
                           </svg>
                         </a>
                       </li>
                       <li>
-                        <a data-tip="Add To Wishlist" data-place="left" href="#">
+                        <a data-tip="Add To Wishlist" data-place="left" href="#" onclick="addToWishlist('${product.id}')">
                           <svg>
                             <use xlink:href="./images/sprite.svg#icon-heart-o"></use>
                           </svg>
@@ -111,16 +117,13 @@ if (categoryContainer) {
 
       // Load Products
       let menuCategory = products.filter(product => {
-        if (product.category === id) {
-          return product;
+        if (id === "All Products") {
+          return true;
         }
+        return product.category === id;
       });
 
-      if (id === "All Products") {
-        displayProductItems(products);
-      } else {
-        displayProductItems(menuCategory);
-      }
+      displayProductItems(menuCategory);
     }
   });
 }
@@ -201,3 +204,70 @@ if (detail) {
     }
   });
 }
+
+// Add to wishlist function
+async function addToWishlist(productId) {
+  const user = auth.currentUser;
+  if (!user) {
+    alert('Please log in to add items to wishlist');
+    return;
+  }
+
+  try {
+    const wishlistRef = db.collection('wishlists').doc(user.uid);
+    await wishlistRef.set({
+      products: firebase.firestore.FieldValue.arrayUnion(productId),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+
+    alert('Product added to wishlist!');
+  } catch (error) {
+    console.error('Error adding to wishlist:', error);
+    alert('Error adding to wishlist. Please try again.');
+  }
+}
+
+// Add to cart function
+async function addToCart(productId) {
+  const user = auth.currentUser;
+  if (!user) {
+    alert('Please log in to add items to cart');
+    return;
+  }
+
+  try {
+    const productDoc = await db.collection('products').doc(productId).get();
+    const product = productDoc.data();
+
+    if (product.stock <= 0) {
+      alert('Product is out of stock');
+      return;
+    }
+
+    await db.collection('carts').add({
+      userId: user.uid,
+      productId: productId,
+      quantity: 1,
+      price: product.price,
+      addedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    alert('Product added to cart successfully!');
+  } catch (error) {
+    console.error('Error adding to cart:', error);
+    alert('Error adding to cart. Please try again.');
+  }
+}
+
+// Initialize product click handlers
+document.addEventListener('click', async (e) => {
+  const addToCartBtn = e.target.closest('.product__btn');
+  if (addToCartBtn) {
+    e.preventDefault();
+    const productCard = addToCartBtn.closest('.product');
+    if (productCard) {
+      const productId = productCard.dataset.id;
+      await addToCart(productId);
+    }
+  }
+});
