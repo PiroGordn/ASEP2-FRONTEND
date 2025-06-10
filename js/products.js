@@ -1,3 +1,5 @@
+import { auth, db } from "./auth.js"; // Adjust path as needed
+
 // Get products from Firebase
 const getProducts = async () => {
   try {
@@ -25,6 +27,7 @@ const categoryCenter = document.querySelector(".category__center");
 window.addEventListener("DOMContentLoaded", async function () {
   const products = await getProducts();
   displayProductItems(products);
+  updateCartTotal(); // Ensure cart total is updated on page load
 });
 
 const displayProductItems = items => {
@@ -56,7 +59,7 @@ const displayProductItems = items => {
                       <div class="product__price">
                         <h4>₹${product.price}</h4>
                       </div>
-                      <a href="#"><button type="submit" class="product__btn">Add To Cart</button></a>
+                      <button type="button" class="product__btn" data-id="${product.id}">Add To Cart</button>
                     </div>
                   <ul>
                       <li>
@@ -67,7 +70,7 @@ const displayProductItems = items => {
                         </a>
                       </li>
                       <li>
-                        <a data-tip="Add To Wishlist" data-place="left" href="#" onclick="addToWishlist('${product.id}')">
+                        <a data-tip="Add To Wishlist" data-place="left" href="#" class="add-to-wishlist-btn">
                           <svg>
                             <use xlink:href="./images/sprite.svg#icon-heart-o"></use>
                           </svg>
@@ -88,6 +91,24 @@ const displayProductItems = items => {
   displayProduct = displayProduct.join("");
   if (categoryCenter) {
     categoryCenter.innerHTML = displayProduct;
+
+    // Add event listener for Add To Cart buttons using event delegation
+    categoryCenter.addEventListener('click', async (e) => {
+      const target = e.target.closest('.product__btn');
+      if (target && target.textContent.includes('Add To Cart')) {
+        const productId = target.dataset.id;
+        await addToCart(productId);
+      }
+      const wishlistTarget = e.target.closest('.add-to-wishlist-btn');
+      if (wishlistTarget) {
+        e.preventDefault(); // Prevent default scroll-to-top behavior
+        const productCard = wishlistTarget.closest('.product');
+        if (productCard) {
+          const productId = productCard.dataset.id;
+          await addToWishlist(e, productId); // Pass event and productId
+        }
+      }
+    });
   }
 };
 
@@ -206,7 +227,8 @@ if (detail) {
 }
 
 // Add to wishlist function
-async function addToWishlist(productId) {
+async function addToWishlist(event, productId) {
+  event.preventDefault(); // Prevent default anchor link behavior (page jump to top)
   const user = auth.currentUser;
   if (!user) {
     alert('Please log in to add items to wishlist');
@@ -239,35 +261,88 @@ async function addToCart(productId) {
     const productDoc = await db.collection('products').doc(productId).get();
     const product = productDoc.data();
 
-    if (product.stock <= 0) {
-      alert('Product is out of stock');
+    if (!product || product.status !== 'active') {
+      alert('Product not available or no longer active.');
       return;
     }
 
-    await db.collection('carts').add({
-      userId: user.uid,
-      productId: productId,
-      quantity: 1,
-      price: product.price,
-      addedAt: firebase.firestore.FieldValue.serverTimestamp()
+    const cartRef = db.collection('carts').doc(user.uid);
+    const cartDoc = await cartRef.get();
+
+    let currentQuantity = 0;
+    let cartItems = {};
+
+    if (cartDoc.exists) {
+      const cartData = cartDoc.data();
+      if (cartData.items) {
+        cartItems = { ...cartData.items }; // Copy existing items
+        if (cartData.items[productId]) {
+          currentQuantity = cartData.items[productId];
+        }
+      }
+    }
+
+    if (product.stock <= currentQuantity) {
+      alert(`Only ${product.stock} of ${product.name} left in stock. You already have ${currentQuantity} in your cart.`);
+      return;
+    }
+
+    // Increment quantity or add new item
+    const newQuantity = currentQuantity + 1;
+    cartItems[productId] = newQuantity;
+
+    await cartRef.set({
+      items: cartItems,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, {
+      merge: true
     });
 
-    alert('Product added to cart successfully!');
+    alert(`${product.name} added to cart! Quantity: ${newQuantity}`);
+    updateCartTotal(); // Update the cart total badge
+
   } catch (error) {
     console.error('Error adding to cart:', error);
     alert('Error adding to cart. Please try again.');
   }
 }
 
-// Initialize product click handlers
-document.addEventListener('click', async (e) => {
-  const addToCartBtn = e.target.closest('.product__btn');
-  if (addToCartBtn) {
-    e.preventDefault();
-    const productCard = addToCartBtn.closest('.product');
-    if (productCard) {
-      const productId = productCard.dataset.id;
-      await addToCart(productId);
-    }
+// Function to update the cart total badge
+async function updateCartTotal() {
+  const user = auth.currentUser;
+  const cartTotalElement = document.getElementById('cart__total');
+
+  if (!cartTotalElement) {
+    console.warn("Cart total element not found.");
+    return;
   }
-});
+
+  if (!user) {
+    cartTotalElement.textContent = '0';
+    return;
+  }
+
+  try {
+    const cartDoc = await db.collection('carts').doc(user.uid).get();
+    let totalItems = 0;
+    if (cartDoc.exists) {
+      const cartData = cartDoc.data();
+      if (cartData.items) {
+        for (const productId in cartData.items) {
+          totalItems += cartData.items[productId];
+        }
+      }
+    }
+    cartTotalElement.textContent = totalItems.toString();
+  } catch (error) {
+    console.error('Error updating cart total:', error);
+    cartTotalElement.textContent = '0';
+  }
+}
+
+// Call updateCartTotal when the page loads and on auth state change (from auth.js)
+// This assumes 'auth' and 'db' are globally available from auth.js
+// If not, ensure auth.js loads before products.js or pass them around
+if (typeof auth !== 'undefined' && typeof db !== 'undefined') {
+  auth.onAuthStateChanged(updateCartTotal);
+}

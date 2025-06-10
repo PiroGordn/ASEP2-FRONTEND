@@ -1,3 +1,5 @@
+import { auth, db } from "./auth.js";
+
 // Buyer Dashboard JavaScript
 
 // Firebase is already initialized in auth.js, db is available globally
@@ -152,7 +154,6 @@ function showEmptyWishlist() {
                     <use xlink:href="./images/sprite.svg#icon-heart-o"></use>
                 </svg>
                 <p>Your wishlist is empty</p>
-                <a href="./index.html?noRedirect=true#category" class="primary-btn">Browse Products</a>
             </div>
         `;
     }

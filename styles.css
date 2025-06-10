@@ -2524,12 +2524,16 @@ Cart Area Media Query
   text-transform: capitalize;
 }
 
+.sign-out-button {
+  color: #c62828; /* Red color for sign out button */
+}
+
 #signOutButton {
   display: none;
   width: 100%;
   padding: 1rem;
   text-align: center;
-  color: var(--black);
+  color: #c62828; /* Set color to red explicitly */
   font-size: 1.4rem;
   border-radius: 4px;
   transition: all 0.3s ease;
@@ -2541,7 +2545,7 @@ Cart Area Media Query
 }
 
 #signOutButton:hover {
-  background-color: var(--orange);
+  background-color: #c62828; /* Red background on hover */
   color: var(--white);
 }
 
@@ -2844,18 +2848,21 @@ Cart Area Media Query
 
 /* Add Product Modal */
 .primary-btn {
-  background: var(--primary);
-  color: #fff;
+  background: var(--orange);
+  color: var(--white);
   padding: 1rem 2rem;
-  border: none;
+  border: 1px solid var(--orange);
   border-radius: 0.5rem;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease-in-out;
 }
 
+
 .primary-btn:hover {
-  background: var(--primary-hover);
+  background: rgb(255, 255, 255);
+  color: rgb(30, 61, 89);
+  border: 1px solid rgb(30, 61, 89);
 }
 
 /* Responsive Design */
@@ -3517,7 +3524,7 @@ Cart Area Media Query
 
 #addProductBtn {
     background-color: var(--orange);
-    color: #fff;
+    var(--primary-dark)
     border: none;
     padding: 0.8rem 1.6rem;
     border-radius: 4px;
@@ -3825,4 +3832,310 @@ Cart Area Media Query
     margin-right: 5px;
     width: 1.6rem;
     height: 1.6rem;
+}
+
+/* Dropdown item styling for consistency */
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  text-align: center;
+  color: var(--black);
+  font-size: 1.4rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none; /* Ensure it looks like a clickable item, not just a link */
+  border-top: 1px solid var(--grey3);
+  margin-top: 1rem;
+}
+
+.dropdown-item:hover {
+  background-color: var(--orange);
+  color: var(--white);
+}
+
+.user-dropdown:hover .icon__user {
+  color: var(--orange);
+}
+
+/*
+======================
+Cart Page Styles
+======================
+*/
+
+.cart__area {
+  padding: 4rem 0;
+}
+
+.cart__table {
+  overflow-x: auto;
+  margin-bottom: 3rem;
+}
+
+.cart__table .table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cart__table .table thead th {
+  text-align: left;
+  padding: 1.2rem 1rem;
+  border-bottom: 1px solid var(--grey3);
+  font-weight: 700;
+  color: var(--black);
+  text-transform: uppercase;
+  font-size: 1.4rem;
+}
+
+.cart__table .table tbody td {
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid var(--grey3);
+  vertical-align: middle;
+  font-size: 1.5rem;
+}
+
+.cart__thumbnail {
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart__thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cart__table .table tbody td a {
+  color: var(--black);
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.cart__table .table tbody td a:hover {
+  color: var(--orange);
+}
+
+.qty__box {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--grey3);
+  border-radius: 5px;
+  overflow: hidden;
+  width: 100px;
+}
+
+.qty__btn {
+  background-color: var(--primaryColor);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  user-select: none;
+  font-weight: bold;
+  color: var(--black);
+  transition: background-color 0.3s ease;
+}
+
+.qty__btn:hover {
+  background-color: #f0f0f0;
+}
+
+.qty__input {
+  border: none;
+  text-align: center;
+  width: 30px;
+  outline: none;
+  -moz-appearance: textfield; /* Firefox */
+}
+
+.qty__input::-webkit-outer-spin-button,
+.qty__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.remove-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--grey2);
+  transition: color 0.3s ease;
+}
+
+.remove-item:hover {
+  color: #c62828; /* Red color for remove on hover */
+}
+
+.remove-item svg {
+  width: 2rem;
+  height: 2rem;
+  fill: currentColor;
+}
+
+.cart-btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.continue__shopping a {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: var(--orange);
+  color: var(--white);
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.continue__shopping a:hover {
+  background-color: #e65c00;
+}
+
+.cart__totals {
+  border: 1px solid var(--grey3);
+  padding: 2.5rem;
+  max-width: 350px;
+  margin-left: auto;
+  background-color: var(--primaryColor);
+  border-radius: 5px;
+}
+
+.cart__totals h3 {
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: var(--black);
+}
+
+.cart__totals ul {
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
+.cart__totals li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px dashed var(--grey3);
+}
+
+.cart__totals li:last-child {
+  border-bottom: none;
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: var(--black);
+}
+
+.cart__totals li span {
+  color: var(--black2);
+}
+
+.cart__totals .new__price {
+  color: var(--orange);
+  font-weight: 700;
+}
+
+.cart__totals a {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 1.2rem 2rem;
+  background-color: var(--secondaryColor);
+  color: var(--white);
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  margin-top: 2rem;
+}
+
+.cart__totals a:hover {
+  background-color: #138496;
+}
+
+/* Responsive Styles for Cart Page */
+@media only screen and (max-width: 768px) {
+  .cart__table .table thead th,
+  .cart__table .table tbody td {
+    font-size: 1.2rem;
+    padding: 1rem 0.5rem;
+  }
+
+  .cart__thumbnail {
+    width: 60px;
+    height: 60px;
+  }
+
+  .qty__box {
+    width: 80px;
+  }
+
+  .qty__btn {
+    padding: 0.3rem 0.8rem;
+  }
+
+  .qty__input {
+    width: 25px;
+  }
+
+  .remove-item svg {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .cart__totals {
+    max-width: 100%;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .cart__area {
+    padding: 2rem 0;
+  }
+
+  .cart__table .table thead th,
+  .cart__table .table tbody td {
+    font-size: 1rem;
+    padding: 0.8rem 0.3rem;
+  }
+
+  .cart__thumbnail {
+    width: 50px;
+    height: 50px;
+  }
+
+  .qty__box {
+    width: 70px;
+  }
+
+  .qty__btn {
+    padding: 0.2rem 0.6rem;
+  }
+
+  .qty__input {
+    width: 20px;
+  }
+
+  .cart__totals h3 {
+    font-size: 2rem;
+  }
+
+  .cart__totals li {
+    font-size: 1.6rem;
+  }
+
+  .cart__totals a {
+    padding: 1rem 1.5rem;
+  }
+
+  .continue__shopping a {
+    padding: 0.8rem 1.5rem;
+  }
 }

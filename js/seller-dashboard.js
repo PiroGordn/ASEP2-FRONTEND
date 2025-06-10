@@ -1,3 +1,5 @@
+import { auth, db } from "./auth.js";
+
 // Seller Dashboard JavaScript
 
 // DOM Elements
@@ -185,7 +187,7 @@ async function getAnalytics(userId) {
 function displayProducts(products) {
     productsListElement.innerHTML = products.map(product => `
         <div class="product__card ${product.status}">
-            <img src="${product.image}" alt="${product.name}">
+            <img src="${product.imageUrl}" alt="${product.name}">
             <div class="product__info">
                 <h3>${product.name}</h3>
                 <p>${product.description}</p>

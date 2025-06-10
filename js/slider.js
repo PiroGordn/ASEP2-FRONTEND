@@ -92,7 +92,7 @@ if (slider4) {
 
 // News
 if (slider5) {
-  new Glide("#glide_5", {
+  window.newsGlide = new Glide("#glide_5", {
     type: "carousel",
     startAt: 0,
     perView: 3,
@@ -108,7 +108,8 @@ if (slider5) {
         perView: 1,
       },
     },
-  }).mount();
+  });
+  window.newsGlide.mount();
 }
 
 AOS.init();

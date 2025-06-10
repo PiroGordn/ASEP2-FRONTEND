@@ -11,8 +11,8 @@
     <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon" />
 
     <!-- Carousel -->
-    <link rel="stylesheet" href="node_modules/@glidejs/glide/dist/css/glide.core.min.css" />
-    <link rel="stylesheet" href="node_modules/@glidejs/glide/dist/css/glide.theme.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.core.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.theme.min.css" />
 
     <!-- Animate On Scroll -->
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
@@ -86,7 +86,7 @@
                             <svg class="icon__cart">
                                 <use xlink:href="./images/sprite.svg#icon-shopping-basket"></use>
                             </svg>
-                            <span id="cart__total">4</span>
+                            <span id="cart__total">0</span>
                         </a>
                     </div>
                 </nav>
@@ -118,53 +118,16 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Product</th>
+                                <th>Price</th>
                                 <th>Quantity</th>
-                                <th>Total</th>
+                                <th>Subtotal</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="product__thumbnail">
-                                    <a href="#">
-                                        <img src="./images/textbook-sample.jpg" alt="textbook">
-                                    </a>
-                                    <div class="product__name">
-                                        <a href="#">Introduction to Computer Science Textbook</a>
-                                        <small>New, Hardcover</small>
-                                    </div>
-                                </td>
-                                <td class="product__quantity">
-                                    <div class="input-counter">
-                                        <div>
-                                            <span class="minus-btn">
-                                                <svg>
-                                                    <use xlink:href="./images/sprite.svg#icon-minus"></use>
-                                                </svg>
-                                            </span>
-                                            <input type="text" min="1" value="1" max="10" class="counter-btn">
-                                            <span class="plus-btn">
-                                                <svg>
-                                                    <use xlink:href="./images/sprite.svg#icon-plus"></use>
-                                                </svg>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="product__subtotal">
-                                    <div class="price">
-                                        <span class="new__price">$89.99</span>
-                                    </div>
-                                </td>
-                                <td class="product__remove">
-                                    <a href="#" class="remove__cart-item">
-                                        <svg>
-                                            <use xlink:href="./images/sprite.svg#icon-trash"></use>
-                                        </svg>
-                                    </a>
-                                </td>
-                            </tr>
+                            <!-- Cart items will be loaded here by JavaScript -->
                         </tbody>
                     </table>
                 </div>
@@ -179,13 +142,14 @@
                     <h3>Cart Totals</h3>
                     <ul>
                         <li>
-                            Subtotal <span class="new__price">$89.99</span>
+                            Subtotal <span class="new__price" id="cartSubtotal">₹0.00</span>
                         </li>
                         <li>
-                            Tax (8%) <span>$7.20</span>
+                            <!-- You might want to implement tax calculation in JavaScript -->
+                            Tax (8%) <span id="cartTaxAmount">₹0.00</span> 
                         </li>
                         <li>
-                            Total <span class="new__price">$97.19</span>
+                            Total <span class="new__price" id="cartOverallTotal">₹0.00</span>
                         </li>
                     </ul>
                     <a href="#">Proceed To Checkout</a>
@@ -281,16 +245,23 @@
     </a>
 
     <!-- Glide Carousel Script -->
-    <script src="node_modules/@glidejs/glide/dist/glide.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/glide.min.js"></script>
     <!-- Animate On Scroll -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <!-- Custom JavaScript -->
+    <!-- Firebase SDK (MUST be loaded first) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Auth JavaScript (MUST be loaded before other scripts that use auth/db) -->
+    <script src="./js/auth.js"></script>
+
+    <!-- Your other JavaScript files -->
     <script src="./js/products.js"></script>
     <script src="./js/index.js"></script>
     <script src="./js/slider.js"></script>
-    <script src="./js/cart.js"></script>
+    <script src="./js/cart.js" type="module"></script>
 </body>
 
 </html>

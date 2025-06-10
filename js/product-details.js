@@ -1,3 +1,4 @@
+import { auth, db } from "./auth.js";
 // Get product ID from URL
 const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get('id');
@@ -20,6 +21,7 @@ const sellerRating = document.getElementById('sellerRating');
 const reviewsList = document.getElementById('reviewsList');
 const addReviewForm = document.getElementById('addReviewForm');
 const reviewForm = document.getElementById('reviewForm');
+const dashboardLink = document.getElementById('dashboardLink');
 
 // Load product details
 async function loadProductDetails() {
@@ -96,6 +98,22 @@ async function loadProductDetails() {
                     if (reviewDoc.empty) {
                         addReviewForm.style.display = 'block';
                     }
+                }
+
+                // Handle Dashboard Link Visibility
+                if (dashboardLink) {
+                    dashboardLink.style.display = 'block';
+                    if (userData.role === 'buyer') {
+                        dashboardLink.href = '/buyer-dashboard.html';
+                    } else if (userData.role === 'seller') {
+                        dashboardLink.href = '/seller-dashboard.html';
+                    }
+                }
+
+            } else {
+                // User is not logged in, hide dashboard link
+                if (dashboardLink) {
+                    dashboardLink.style.display = 'none';
                 }
             }
         });
