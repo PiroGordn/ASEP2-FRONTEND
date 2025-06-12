@@ -74,3 +74,80 @@ window.addEventListener("scroll", e => {
     gotoTop.classList.remove("show-top");
   }
 });
+
+/*
+=============
+Search Functionality
+=============
+ */
+
+import { getProducts, displayProductItems } from "./products.js";
+
+// Get search elements
+const searchIcon = document.querySelector('.icon__search');
+const searchOverlay = document.getElementById('searchOverlay');
+const closeSearchButton = document.querySelector('.close-search');
+const searchInput = document.getElementById('searchInput');
+const searchButton = document.getElementById('searchButton');
+
+// Function to open search overlay
+function openSearchOverlay() {
+  searchOverlay.style.display = 'flex';
+  document.body.classList.add('no-scroll'); // Optional: Prevent scrolling when overlay is open
+  searchInput.focus();
+}
+
+// Function to close search overlay
+function closeSearchOverlay() {
+  searchOverlay.style.display = 'none';
+  document.body.classList.remove('no-scroll');
+  searchInput.value = ''; // Clear search input on close
+}
+
+// Event Listeners
+searchIcon.addEventListener('click', (e) => {
+  e.preventDefault(); // Prevent default anchor behavior
+  openSearchOverlay();
+});
+closeSearchButton.addEventListener('click', closeSearchOverlay);
+
+// Close overlay if clicked outside content
+window.addEventListener('click', (event) => {
+  if (event.target === searchOverlay) {
+    closeSearchOverlay();
+  }
+});
+
+// Handle search button click or Enter key press
+searchButton.addEventListener('click', handleSearch);
+searchInput.addEventListener('keypress', (event) => {
+  if (event.key === 'Enter') {
+    handleSearch();
+  }
+});
+
+function handleSearch() {
+  const query = searchInput.value.trim().toLowerCase();
+  if (query) {
+    // console.log('Search query:', query);
+    // alert(`Searching for: ${query}`); // For demonstration
+    
+    getProducts().then(products => {
+      const filteredProducts = products.filter(product => 
+        product.name.toLowerCase().includes(query) ||
+        (product.description && product.description.toLowerCase().includes(query)) ||
+        (product.category && product.category.toLowerCase().includes(query))
+      );
+      displayProductItems(filteredProducts);
+      closeSearchOverlay();
+
+      // Scroll to the category section to show results
+      const categorySection = document.getElementById('category');
+      if (categorySection) {
+        categorySection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  } else {
+    alert('Please enter a search term.');
+  }
+}

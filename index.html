@@ -164,7 +164,14 @@
                 </form>
               </div>
             </div>
-
+                        <!-- Search Overlay -->
+                        <div id="searchOverlay" class="search-overlay">
+                          <div class="search-content">
+                            <span class="close-search">&times;</span>
+                            <input type="text" id="searchInput" placeholder="Search for products...">
+                            <button id="searchButton">Search</button>
+                          </div>
+                        </div>
             <a href="#" class="icon__item">
               <svg class="icon__search">
                 <use xlink:href="./images/sprite.svg#icon-search"></use>
@@ -574,11 +581,11 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <!-- Your other JavaScript files -->
-    <script src="./js/products.js" type="module"></script>
-    <script src="./js/index.js"></script>
+    <script src="./js/products.js?v=1.1" type="module"></script>
+    <script src="./js/index.js?v=1.1" type="module"></script>
     <script src="./js/slider.js"></script>
     <!-- Auth JavaScript (MUST be loaded after slider.js for news display) -->
-    <script src="./js/auth.js" type="module"></script>
+    <script src="./js/auth.js?v=1.1" type="module"></script>
 
 </body>
 

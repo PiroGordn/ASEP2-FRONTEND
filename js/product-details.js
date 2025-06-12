@@ -1,4 +1,5 @@
 import { auth, db } from "./auth.js";
+import { addToCart, updateCartTotal } from "./products.js";
 // Get product ID from URL
 const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get('id');
@@ -192,36 +193,20 @@ document.getElementById('increaseQuantity').onclick = () => {
 
 // Add to cart handler
 addToCartBtn.onclick = async () => {
+    console.log("Add to Cart button clicked on product details page.");
     const user = auth.currentUser;
     if (!user) {
         alert('Please log in to add items to cart');
         return;
     }
 
-    try {
-        const quantity = parseInt(quantityInput.value);
-        const productDoc = await db.collection('products').doc(productId).get();
-        const product = productDoc.data();
+    const quantity = parseInt(quantityInput.value);
+    console.log("Product ID from URL:", productId, "Quantity from input:", quantity);
+    
+    // Call the shared addToCart function imported from products.js
+    await addToCart(productId, quantity);
 
-        if (quantity > product.stock) {
-            alert('Not enough stock available');
-            return;
-        }
-
-        // Add to cart collection
-        await db.collection('carts').add({
-            userId: user.uid,
-            productId: productId,
-            quantity: quantity,
-            price: product.price,
-            addedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        alert('Product added to cart successfully!');
-    } catch (error) {
-        console.error('Error adding to cart:', error);
-        alert('Error adding to cart. Please try again.');
-    }
+    // The alert and cart total update are now handled by the shared addToCart function
 };
 
 // Check if product is in wishlist

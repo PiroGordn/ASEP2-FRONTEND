@@ -1,7 +1,7 @@
 import { auth, db } from "./auth.js"; // Adjust path as needed
 
 // Get products from Firebase
-const getProducts = async () => {
+export const getProducts = async () => {
   try {
     const productsSnapshot = await db.collection('products')
       .where('status', '==', 'active')
@@ -30,7 +30,7 @@ window.addEventListener("DOMContentLoaded", async function () {
   updateCartTotal(); // Ensure cart total is updated on page load
 });
 
-const displayProductItems = items => {
+export const displayProductItems = items => {
   let displayProduct = items.map(
     product => ` 
                   <div class="product category__products" data-id="${product.id}">
@@ -227,7 +227,7 @@ if (detail) {
 }
 
 // Add to wishlist function
-async function addToWishlist(event, productId) {
+export async function addToWishlist(event, productId) {
   event.preventDefault(); // Prevent default anchor link behavior (page jump to top)
   const user = auth.currentUser;
   if (!user) {
@@ -250,7 +250,7 @@ async function addToWishlist(event, productId) {
 }
 
 // Add to cart function
-async function addToCart(productId) {
+export async function addToCart(productId, quantity = 1) {
   const user = auth.currentUser;
   if (!user) {
     alert('Please log in to add items to cart');
@@ -258,49 +258,35 @@ async function addToCart(productId) {
   }
 
   try {
-    const productDoc = await db.collection('products').doc(productId).get();
-    const product = productDoc.data();
-
-    if (!product || product.status !== 'active') {
-      alert('Product not available or no longer active.');
-      return;
-    }
-
     const cartRef = db.collection('carts').doc(user.uid);
     const cartDoc = await cartRef.get();
 
-    let currentQuantity = 0;
     let cartItems = {};
-
-    if (cartDoc.exists) {
-      const cartData = cartDoc.data();
-      if (cartData.items) {
-        cartItems = { ...cartData.items }; // Copy existing items
-        if (cartData.items[productId]) {
-          currentQuantity = cartData.items[productId];
-        }
-      }
+    if (cartDoc.exists && cartDoc.data().items) {
+      cartItems = cartDoc.data().items;
     }
 
-    if (product.stock <= currentQuantity) {
-      alert(`Only ${product.stock} of ${product.name} left in stock. You already have ${currentQuantity} in your cart.`);
+    // Get product details to check stock
+    const productDoc = await db.collection('products').doc(productId).get();
+    if (!productDoc.exists) {
+      alert('Product not found.');
+      return;
+    }
+    const product = productDoc.data();
+
+    const currentCartQuantity = cartItems[productId] || 0;
+    const newQuantity = currentCartQuantity + quantity;
+
+    if (newQuantity > product.stock) {
+      alert(`Not enough stock available. Only ${product.stock - currentCartQuantity} more can be added.`);
       return;
     }
 
-    // Increment quantity or add new item
-    const newQuantity = currentQuantity + 1;
     cartItems[productId] = newQuantity;
 
-    await cartRef.set({
-      items: cartItems,
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }, {
-      merge: true
-    });
-
-    alert(`${product.name} added to cart! Quantity: ${newQuantity}`);
-    updateCartTotal(); // Update the cart total badge
-
+    await cartRef.set({ items: cartItems, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+    alert('Product added to cart successfully!');
+    updateCartTotal(); // Update the cart total in the UI
   } catch (error) {
     console.error('Error adding to cart:', error);
     alert('Error adding to cart. Please try again.');
@@ -308,7 +294,7 @@ async function addToCart(productId) {
 }
 
 // Function to update the cart total badge
-async function updateCartTotal() {
+export async function updateCartTotal() {
   const user = auth.currentUser;
   const cartTotalElement = document.getElementById('cart__total');
 

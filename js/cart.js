@@ -5,7 +5,6 @@ const cartSubtotalElement = document.getElementById('cartSubtotal');
 const cartOverallTotalElement = document.getElementById('cartOverallTotal');
 const cartTaxAmountElement = document.getElementById('cartTaxAmount');
 
-// Helper to render a single product row
 function renderCartItemRow(productId, product, quantity) {
     const itemSubtotal = product.price * quantity;
     return `
@@ -38,16 +37,14 @@ function renderCartItemRow(productId, product, quantity) {
     `;
 }
 
-// Helper to update cart totals display
 function updateCartTotalsDisplay(totalSubtotal) {
     if (cartSubtotalElement) cartSubtotalElement.textContent = `₹${totalSubtotal.toFixed(2)}`;
-    const tax = totalSubtotal * 0.08; // Assuming 8% tax
+    const tax = totalSubtotal * 0.08;
     if (cartTaxAmountElement) cartTaxAmountElement.textContent = `₹${tax.toFixed(2)}`;
     const overallTotal = totalSubtotal + tax;
     if (cartOverallTotalElement) cartOverallTotalElement.textContent = `₹${overallTotal.toFixed(2)}`;
 }
 
-// Helper function to update cart totals from Firestore
 async function updateOverallCartTotals() {
     const user = auth.currentUser;
     if (!user) {
@@ -65,7 +62,7 @@ async function updateOverallCartTotals() {
         const cartItems = cartDoc.data().items;
         let totalSubtotal = 0;
         const productPromises = [];
-        const productsMap = new Map(); // To store fetched product data for total calculation
+        const productsMap = new Map();
 
         for (const productId in cartItems) {
             productPromises.push(
@@ -76,7 +73,7 @@ async function updateOverallCartTotals() {
                 })
             );
         }
-        await Promise.all(productPromises); // Fetch all product details concurrently
+        await Promise.all(productPromises);
 
         for (const productId in cartItems) {
             const quantity = cartItems[productId];
@@ -89,10 +86,9 @@ async function updateOverallCartTotals() {
 
     } catch (error) {
         console.error('Error updating overall cart totals:', error);
-        updateCartTotalsDisplay(0); // Reset totals on error
+        updateCartTotalsDisplay(0);
     }
 }
-
 
 async function loadCartItems() {
     const user = auth.currentUser;
@@ -110,7 +106,7 @@ async function loadCartItems() {
     cartTableBody.innerHTML = '<tr><td colspan="6">Loading cart...</td></tr>';
 
     try {
-        const cartDoc = await db.collection('carts').doc(user.uid).get();
+        const cartDoc = await db.collection('carts').doc(user.uid).get({ source: 'server' });
         if (!cartDoc.exists || !cartDoc.data().items || Object.keys(cartDoc.data().items).length === 0) {
             cartTableBody.innerHTML = '<tr><td colspan="6">Your cart is empty.</td></tr>';
             updateCartTotalsDisplay(0);
@@ -143,7 +139,7 @@ async function loadCartItems() {
         }
 
         cartTableBody.innerHTML = cartHtml;
-        updateOverallCartTotals(); // Call new function to update totals
+        updateOverallCartTotals();
 
         document.querySelectorAll('.update-quantity').forEach(button => {
             button.addEventListener('click', updateQuantity);
@@ -190,33 +186,23 @@ async function updateQuantity(event) {
             if (currentQuantity > 1) {
                 newQuantity = currentQuantity - 1;
             } else {
-                // If quantity is 1 and user tries to decrease, remove the item
-                delete cartItems[productId];
-                await cartRef.set({ items: cartItems, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
-                loadCartItems(); // Full reload to remove the row and re-render all rows/totals
-                return; // Exit here as item is removed
+                removeItemFromCart(event, productId);
+                return;
             }
         }
 
-        // Only proceed if quantity has actually changed (e.g., not blocked by stock limit)
         if (newQuantity !== currentQuantity) {
             cartItems[productId] = newQuantity;
             await cartRef.set({ items: cartItems, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
 
-            // Update UI for the specific row immediately
             const row = event.target.closest('tr');
             const qtyInput = row.querySelector('.qty__input');
             const itemSubtotalElement = row.querySelector('.item-subtotal');
 
-            if (qtyInput) {
-                qtyInput.value = newQuantity;
-            }
-            if (itemSubtotalElement && product) {
-                itemSubtotalElement.textContent = (product.price * newQuantity).toFixed(2);
-            }
-            updateOverallCartTotals(); // Update overall totals
+            if (qtyInput) qtyInput.value = newQuantity;
+            if (itemSubtotalElement && product) itemSubtotalElement.textContent = (product.price * newQuantity).toFixed(2);
+            updateOverallCartTotals();
         }
-
 
     } catch (error) {
         console.error('Error updating quantity:', error);
@@ -224,25 +210,39 @@ async function updateQuantity(event) {
     }
 }
 
-async function removeItemFromCart(event) {
+async function removeItemFromCart(event, productId) {
     event.preventDefault();
-    const productId = event.target.closest('.remove-item').dataset.productId;
+    const idToRemove = productId || event.target.closest('.remove-item').dataset.productId;
     const user = auth.currentUser;
 
-    if (!user || !productId) return;
+    if (!user || !idToRemove) return;
 
     if (!confirm('Are you sure you want to remove this item from your cart?')) return;
 
     try {
         const cartRef = db.collection('carts').doc(user.uid);
         const cartDoc = await cartRef.get();
-        if (!cartDoc.exists || !cartDoc.data().items || !cartDoc.data().items[productId]) return;
+        if (!cartDoc.exists || !cartDoc.data().items || !cartDoc.data().items[idToRemove]) return;
 
         const cartItems = { ...cartDoc.data().items };
-        delete cartItems[productId];
+        delete cartItems[idToRemove];
 
-        await cartRef.set({ items: cartItems, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
-        loadCartItems(); // Full reload after removal
+        if (Object.keys(cartItems).length === 0) {
+            await cartRef.update({
+                items: firebase.firestore.FieldValue.delete(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        } else {
+            await cartRef.update({
+                [`items.${idToRemove}`]: firebase.firestore.FieldValue.delete(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        }
+
+        const rowToRemove = event.target.closest('tr');
+        if (rowToRemove) rowToRemove.remove();
+
+        updateOverallCartTotals();
 
     } catch (error) {
         console.error('Error removing item:', error);
@@ -250,10 +250,8 @@ async function removeItemFromCart(event) {
     }
 }
 
-// Load cart items when the page loads
 document.addEventListener('DOMContentLoaded', loadCartItems);
 
-// Listen for authentication state changes to reload cart if user logs in/out
 auth.onAuthStateChanged(() => {
     loadCartItems();
 });
