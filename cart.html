@@ -54,17 +54,23 @@
                             <li class="nav__item">
                                 <a href="index.html" class="nav__link">Home</a>
                             </li>
+                            <!--
                             <li class="nav__item">
                                 <a href="index.html#latest" class="nav__link">New Arrivals</a>
                             </li>
+                            -->
+                            <!--
                             <li class="nav__item">
                                 <a href="index.html#category" class="nav__link">Categories</a>
                             </li>
+                            -->
+                            <!--
                             <li class="nav__item">
                                 <a href="index.html#news" class="nav__link">Campus News</a>
                             </li>
+                            -->
                             <li class="nav__item">
-                                <a href="index.html#contact" class="nav__link">Contact</a>
+                                <a href="cart.html#footer" class="nav__link">Contact</a>
                             </li>
                         </ul>
                     </div>
@@ -158,6 +164,7 @@
         </section>
 
         <!-- Facility Section -->
+         <!-- fac
         <section class="facility__section section" id="facility">
             <div class="container">
                 <div class="facility__contianer">
@@ -200,7 +207,7 @@
             </div>
         </section>
     </main>
-
+    -->
     <!-- Footer -->
     <footer id="footer" class="section footer">
         <div class="container">
@@ -243,26 +250,6 @@
             <use xlink:href="./images/sprite.svg#icon-arrow-up"></use>
         </svg>
     </a>
-    <!-- Cart Totals Section -->
-<div class="cart__totals">
-    <h3>Cart Totals</h3>
-    <ul>
-        <li>
-            Subtotal <span class="new__price" id="cartSubtotal">₹0.00</span>
-        </li>
-        <li>
-            Tax (8%) <span id="cartTaxAmount">₹0.00</span>
-        </li>
-        <li>
-            Total <span class="new__price" id="cartOverallTotal">₹0.00</span>
-        </li>
-    </ul>
-    <!-- Razorpay Button -->
-    <button id="payBtn" style="padding: 10px 20px; background-color: #3399cc; color: white; border: none; border-radius: 4px; cursor: pointer;">
-        Pay with Razorpay
-    </button>
-</div>
-
 <!-- Razorpay Checkout Script -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
@@ -284,6 +271,19 @@
             "description": "Test Purchase",
             "image": "./images/favicon.ico",
             "handler": function (response) {
+                // Clear the cart after successful payment
+                const cartTable = document.querySelector('.cart__table tbody');
+                cartTable.innerHTML = '';
+                
+                // Reset cart total
+                document.getElementById('cart__total').textContent = '0';
+                document.getElementById('cartSubtotal').textContent = '₹0.00';
+                document.getElementById('cartTaxAmount').textContent = '₹0.00';
+                document.getElementById('cartOverallTotal').textContent = '₹0.00';
+                
+                // Clear cart from localStorage
+                localStorage.removeItem('cart');
+                
                 alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
             },
             "prefill": {

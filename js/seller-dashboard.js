@@ -1,5 +1,4 @@
 import { auth, db } from "./auth.js";
-
 // Seller Dashboard JavaScript
 
 // DOM Elements
@@ -199,8 +198,9 @@ function displayProducts(products) {
                 <div class="product__actions">
                     <button onclick="editProduct('${product.id}')" class="edit-btn">Edit</button>
                     <button onclick="toggleProductStatus('${product.id}')" class="status-btn">
-                        ${product.status === 'active' ? 'Deactivate' : 'Activate'}
+                        ${product.status === 'active' ? 'Inactivate' : 'Activate'}
                     </button>
+                    <button onclick="deleteProduct('${product.id}')" class="delete-btn">Delete</button>
                 </div>
             </div>
         </div>
@@ -352,8 +352,123 @@ async function filterProducts(userId) {
 
 // Edit product
 async function editProduct(productId) {
-    // Implementation for editing a product
-    console.log('Edit product:', productId);
+    try {
+        // Get product data
+        const productRef = db.collection('products').doc(productId);
+        const productDoc = await productRef.get();
+        const product = productDoc.data();
+
+        // Create and show edit modal
+        const editModal = document.createElement('div');
+        editModal.className = 'modal';
+        editModal.id = 'editProductModal';
+        editModal.innerHTML = `
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Edit Product</h2>
+                <form id="editProductForm">
+                    <div class="form-group">
+                        <input type="text" id="editProductName" value="${product.name}" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="editProductDescription" required>${product.description}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" id="editProductPrice" value="${product.price}" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <select id="editProductCategory" required>
+                            <option value="electronics" ${product.category === 'electronics' ? 'selected' : ''}>Electronics</option>
+                            <option value="books" ${product.category === 'books' ? 'selected' : ''}>Books</option>
+                            <option value="clothing" ${product.category === 'clothing' ? 'selected' : ''}>Clothing</option>
+                            <option value="other" ${product.category === 'other' ? 'selected' : ''}>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" id="editProductStock" value="${product.stock}" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="editProductImageUrl" value="${product.imageUrl}" required>
+                    </div>
+                    <div class="form-group">
+                        <select id="editProductCondition" required>
+                            <option value="new" ${product.condition === 'new' ? 'selected' : ''}>New</option>
+                            <option value="like-new" ${product.condition === 'like-new' ? 'selected' : ''}>Like New</option>
+                            <option value="good" ${product.condition === 'good' ? 'selected' : ''}>Good</option>
+                            <option value="fair" ${product.condition === 'fair' ? 'selected' : ''}>Fair</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="editProductTags" value="${product.tags.join(', ')}" placeholder="Tags (comma-separated)">
+                    </div>
+                    <button type="submit">Update Product</button>
+                </form>
+            </div>
+        `;
+
+        document.body.appendChild(editModal);
+        editModal.style.display = 'block';
+
+        // Close modal functionality
+        const closeBtn = editModal.querySelector('.close');
+        closeBtn.onclick = () => {
+            editModal.remove();
+        };
+
+        window.onclick = (event) => {
+            if (event.target === editModal) {
+                editModal.remove();
+            }
+        };
+
+        // Handle form submission
+        const editForm = document.getElementById('editProductForm');
+        editForm.onsubmit = async (e) => {
+            e.preventDefault();
+
+            try {
+                const updatedProduct = {
+                    name: document.getElementById('editProductName').value,
+                    description: document.getElementById('editProductDescription').value,
+                    price: parseFloat(document.getElementById('editProductPrice').value),
+                    category: document.getElementById('editProductCategory').value,
+                    stock: parseInt(document.getElementById('editProductStock').value),
+                    imageUrl: document.getElementById('editProductImageUrl').value,
+                    condition: document.getElementById('editProductCondition').value,
+                    tags: document.getElementById('editProductTags').value
+                        .split(',')
+                        .map(tag => tag.trim())
+                        .filter(tag => tag.length > 0),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                // Validate required fields
+                if (!updatedProduct.name || !updatedProduct.description || !updatedProduct.price || 
+                    !updatedProduct.category || !updatedProduct.stock || !updatedProduct.imageUrl) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+
+                // Update product in Firestore
+                await productRef.update(updatedProduct);
+                
+                // Close modal
+                editModal.remove();
+                
+                // Refresh products list
+                const products = await getProducts(auth.currentUser.uid);
+                displayProducts(products);
+                
+                alert('Product updated successfully!');
+            } catch (error) {
+                console.error('Error updating product:', error);
+                alert('Error updating product. Please try again.');
+            }
+        };
+    } catch (error) {
+        console.error('Error loading product for edit:', error);
+        alert('Error loading product details. Please try again.');
+    }
 }
 
 // Toggle product status
@@ -394,5 +509,34 @@ async function updateOrderStatus(orderId, newStatus) {
     }
 }
 
+// Delete product
+async function deleteProduct(productId) {
+    if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+        return;
+    }
+
+    try {
+        // Delete the product from Firestore
+        await db.collection('products').doc(productId).delete();
+        
+        // Reload products
+        const products = await getProducts(auth.currentUser.uid);
+        displayProducts(products);
+        
+        // Update total products count
+        totalProductsElement.textContent = products.length;
+        
+        alert('Product deleted successfully!');
+    } catch (error) {
+        console.error('Error deleting product:', error);
+        alert('Failed to delete product. Please try again.');
+    }
+}
+
 // Initialize dashboard when the page loads
-document.addEventListener('DOMContentLoaded', initializeDashboard); 
+document.addEventListener('DOMContentLoaded', initializeDashboard);
+
+// Expose functions to global scope for inline onclick handlers
+window.deleteProduct = deleteProduct;
+window.editProduct = editProduct;
+window.toggleProductStatus = toggleProductStatus; 
