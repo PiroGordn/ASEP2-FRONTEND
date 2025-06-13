@@ -152,7 +152,7 @@
                             Total <span class="new__price" id="cartOverallTotal">₹0.00</span>
                         </li>
                     </ul>
-                    <a href="#">Proceed To Checkout</a>
+                    <button id="payBtn">Proceed To Checkout</button>
                 </div>
             </div>
         </section>
@@ -243,6 +243,63 @@
             <use xlink:href="./images/sprite.svg#icon-arrow-up"></use>
         </svg>
     </a>
+    <!-- Cart Totals Section -->
+<div class="cart__totals">
+    <h3>Cart Totals</h3>
+    <ul>
+        <li>
+            Subtotal <span class="new__price" id="cartSubtotal">₹0.00</span>
+        </li>
+        <li>
+            Tax (8%) <span id="cartTaxAmount">₹0.00</span>
+        </li>
+        <li>
+            Total <span class="new__price" id="cartOverallTotal">₹0.00</span>
+        </li>
+    </ul>
+    <!-- Razorpay Button -->
+    <button id="payBtn" style="padding: 10px 20px; background-color: #3399cc; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        Pay with Razorpay
+    </button>
+</div>
+
+<!-- Razorpay Checkout Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.getElementById("payBtn").addEventListener("click", function () {
+        // Get amount from cart
+        const totalText = document.getElementById("cartOverallTotal").textContent;
+        const totalAmount = parseFloat(totalText.replace(/[₹,]/g, '')) || 0;
+
+        if (totalAmount === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
+
+        const options = {
+            "key": "rzp_test_1DP5mmOlF5G5ag", 
+            "amount": totalAmount * 100, 
+            "currency": "INR",
+            "name": "College Store",
+            "description": "Test Purchase",
+            "image": "./images/favicon.ico",
+            "handler": function (response) {
+                alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
+            },
+            "prefill": {
+                "name": "Student",
+                "email": "student@example.com",
+                "contact": "9999999999"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+
+        const rzp1 = new Razorpay(options);
+        rzp1.open();
+    });
+</script>
 
     <!-- Glide Carousel Script -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/glide.min.js"></script>

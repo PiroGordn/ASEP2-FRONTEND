@@ -2356,7 +2356,7 @@ Cart Area
 .continue__shopping a:visited {
   font-size: 1.5rem;
   padding: 1.2rem 3rem;
-  color: var(--black);
+  color: var(--white);
   text-transform: uppercase;
   border: 1px solid var(--black);
   transition: all 0.4s ease-in-out;
@@ -4218,4 +4218,21 @@ Cart Page Styles
   .continue__shopping a {
     padding: 0.8rem 1.5rem;
   }
+}
+
+#payBtn {
+  background-color: var(--orange);
+  color: var(--white);
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 5px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#payBtn:hover {
+  background-color: #e65c00;
+  color: var(--white);
+  border: 1px solid var(--orange);
 }
